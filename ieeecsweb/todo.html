@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timeline Todo App</title>
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f8f9fa;
+    }
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+    h1, h2, h3 {
+        text-align: center;
+    }
+    .todo-list {
+        list-style-type: none;
+        padding: 0;
+    }
+    .todo-list li {
+        padding: 15px;
+        margin-bottom: 15px;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background-color 0.3s ease;
+    }
+    .todo-list li:hover {
+        background-color: #e9ecef;
+    }
+    .todo-list li span {
+        flex-grow: 1;
+        font-size: 18px;
+    }
+    .todo-list li button {
+        padding: 8px 16px;
+        background-color: #dc3545;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .todo-list li button:hover {
+        background-color: #c82333;
+    }
+    .timeline {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .timeline span {
+        display: inline-block;
+        width: 25%;
+        text-align: center;
+        font-size: 14px;
+        color: #666;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+    .timeline span:hover {
+        color: #007bff;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Timeline Todo App</h1>
+
+    <!-- Add Todo Form -->
+    <form id="addTodoForm" class="form">
+        <input type="text" id="todoInput" placeholder="Add a new todo">
+        <input type="date" id="todoDate">
+        <button type="submit">Add Todo</button>
+    </form>
+
+    <!-- Todo List -->
+    <ul class="todo-list" id="todoList"></ul>
+
+    <!-- Timeline -->
+    <div class="timeline">
+        <span class="today">Today</span>
+        <span class="tomorrow">Tomorrow</span>
+        <span class="this-week">This Week</span>
+        <span class="this-month">This Month</span>
+    </div>
+</div>
+
+<script>
+    const addTodoForm = document.getElementById('addTodoForm');
+    const todoInput = document.getElementById('todoInput');
+    const todoDate = document.getElementById('todoDate');
+    const todoList = document.getElementById('todoList');
+
+    addTodoForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const todoText = todoInput.value.trim();
+        const todoDateValue = todoDate.value;
+        if (todoText && todoDateValue) {
+            const todoItem = createTodoItem(todoText, todoDateValue);
+            todoList.appendChild(todoItem);
+            todoInput.value = '';
+            todoDate.value = '';
+        } else {
+            alert('Please enter a todo and select a date.');
+        }
+    });
+
+    function createTodoItem(text, date) {
+        const li = document.createElement('li');
+        const span = document.createElement('span');
+        span.textContent = `${text} - ${date}`;
+        li.appendChild(span);
+        const button = document.createElement('button');
+        button.textContent = 'Delete';
+        button.addEventListener('click', function() {
+            li.remove();
+        });
+        li.appendChild(button);
+        return li;
+    }
+
+    // Timeline Filter
+    const todayBtn = document.querySelector('.today');
+    const tomorrowBtn = document.querySelector('.tomorrow');
+    const thisWeekBtn = document.querySelector('.this-week');
+    const thisMonthBtn = document.querySelector('.this-month');
+
+    todayBtn.addEventListener('click', () => filterTodos('Today'));
+    tomorrowBtn.addEventListener('click', () => filterTodos('Tomorrow'));
+    thisWeekBtn.addEventListener('click', () => filterTodos('This Week'));
+    thisMonthBtn.addEventListener('click', () => filterTodos('This Month'));
+
+    function filterTodos(timeframe) {
+        const todos = document.querySelectorAll('.todo-list li');
+        todos.forEach(todo => {
+            const todoText = todo.textContent.toLowerCase();
+            todo.style.display = todoText.includes(timeframe.toLowerCase()) ? 'flex' : 'none';
+        });
+    }
+</script>
+
+</body>
+</html>

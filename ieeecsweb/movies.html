@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Binge-Watching</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome to Movie Binge-Watching</h1>
+        <button id="loginBtn">Login</button>
+        <button id="registerBtn">Register</button>
+    </header>
+    
+    <main>
+        <section id="moviesSection">
+            <h2>Movies</h2>
+            <div id="movieGrid" class="grid-container"></div>
+        </section>
+
+        <section id="watchlistSection">
+            <h2>Watchlist</h2>
+            <div id="watchlist" class="grid-container"></div>
+        </section>
+    </main>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Login</h2>
+            <form id="loginForm">
+                <input type="text" id="username" placeholder="Username">
+                <input type="password" id="password" placeholder="Password">
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Register</h2>
+            <form id="registerForm">
+                <input type="text" id="newUsername" placeholder="Username">
+                <input type="email" id="email" placeholder="Email">
+                <input type="password" id="newPassword" placeholder="Password">
+                <button type="submit">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

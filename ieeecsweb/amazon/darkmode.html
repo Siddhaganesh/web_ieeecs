@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dark Mode Toggle</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0; /* Light mode background color */
+        color: #333; /* Light mode text color */
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .toggle-container {
+        text-align: right;
+        margin-bottom: 20px;
+    }
+
+    .toggle-label {
+        font-size: 16px;
+        margin-right: 10px;
+    }
+
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        border-radius: 34px;
+        transition: background-color 0.3s ease;
+    }
+
+    .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        border-radius: 50%;
+        transition: transform 0.3s ease;
+    }
+
+    input:checked + .toggle-slider {
+        background-color: #2196F3; /* Dark mode background color */
+    }
+
+    input:checked + .toggle-slider:before {
+        transform: translateX(26px);
+    }
+
+    /* Dark mode styles */
+    body.dark-mode {
+        background-color: #333; /* Dark mode background color */
+        color: #fff; /* Dark mode text color */
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="toggle-container">
+        <span class="toggle-label">Dark Mode:</span>
+        <label class="toggle-switch">
+            <input type="checkbox" id="darkModeToggle">
+            <span class="toggle-slider"></span>
+        </label>
+    </div>
+    <h1>Welcome to My Website</h1>
+    <p>This is a simple demonstration of a dark mode toggle.</p>
+</div>
+
+<script>
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const body = document.body;
+
+    darkModeToggle.addEventListener('change', () => {
+        body.classList.toggle('dark-mode');
+    });
+</script>
+
+</body>
+</html>

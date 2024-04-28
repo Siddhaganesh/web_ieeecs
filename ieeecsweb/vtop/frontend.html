@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VTOP Course Management</title>
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f8f9fa;
+    }
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    .btn {
+        padding: 12px 24px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .btn:hover {
+        background-color: #0056b3;
+    }
+    .faculty-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+    .faculty-list li {
+        padding: 10px 0;
+        border-bottom: 1px solid #eaeaea;
+        transition: background-color 0.3s ease;
+    }
+    .faculty-list li:hover {
+        background-color: #f8f9fa;
+    }
+    .faculty-list li:last-child {
+        border-bottom: none;
+    }
+    .document-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+    .document-list li {
+        padding: 10px 0;
+        border-bottom: 1px solid #eaeaea;
+        transition: background-color 0.3s ease;
+    }
+    .document-list li:hover {
+        background-color: #f8f9fa;
+    }
+    .document-list li:last-child {
+        border-bottom: none;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1 style="text-align: center;">VTOP Course Management</h1>
+
+    <div class="form-group">
+        <h2>Add New Faculty</h2>
+        <input type="text" id="facultyName" placeholder="Enter Faculty Name">
+        <button class="btn" onclick="addFaculty()">Add Faculty</button>
+    </div>
+
+    <div class="form-group">
+        <h2>Faculty List</h2>
+        <ul class="faculty-list" id="facultyList"></ul>
+    </div>
+    <div class="form-group">
+        <h2>Upload Document</h2>
+        <input type="file" id="documentFile">
+        <select id="selectFaculty">
+            <option value="">Select Faculty</option>
+        </select>
+        <button class="btn" onclick="uploadDocument()">Upload Document</button>
+    </div>
+
+    <div class="form-group">
+        <h2>Uploaded Documents</h2>
+        <ul class="document-list" id="documentList"></ul>
+    </div>
+</div>
+
+<script>
+    const API_URL = 'https://your-backend-api-url';
+    async function populateFacultyList() {
+        try {
+            const response = await fetch(`${API_URL}/faculties`);
+            const data = await response.json();
+            const facultyList = document.getElementById('facultyList');
+            facultyList.innerHTML = '';
+            data.forEach(faculty => {
+                const li = document.createElement('li');
+                li.textContent = faculty.name;
+                li.addEventListener('click', () => {
+                    fetchDocuments(faculty.id);
+                });
+                facultyList.appendChild(li);
+            });
+        } catch (error) {
+            console.error('Error fetching faculty list:', error);
+        }
+    }
+    async function addFaculty() {
+        try {
+            const facultyName = document.getElementById('facultyName').value;
+            const response = await fetch(`${API_URL}/faculties`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: facultyName })
+            });
+            if (response.ok) {
+                alert('Faculty added successfully!');
+                populateFacultyList();
+            } else {
+                throw new Error('Failed to add faculty');
+            }
+        } catch (error) {
+            console.error('Error adding faculty:', error);
+        }
+    }
+    async function uploadDocument() {
+        try {
+            const fileInput = document.getElementById('documentFile');
+            const selectedFacultyId = document.getElementById('selectFaculty').value;
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            formData.append('facultyId', selectedFacultyId);
+
+            const response = await fetch(`${API_URL}/documents/upload`, {
+                method: 'POST',
+                body: formData
+            });
+            if (response.ok) {
+                alert('Document uploaded successfully!');
+                fetchDocuments(selectedFacultyId);
+            } else {
+                throw new Error('Failed to upload document');
+            }
+        } catch (error) {
+            console.error('Error uploading document:', error);
+        }
+    }
+    async function fetchDocuments(facultyId) {
+        try {
+            const response = await fetch(`${API_URL}/faculties/${facultyId}/documents`);
+            const data = await response.json();
+            const documentList = document.getElementById('documentList');
+            documentList.innerHTML = '';
+            data.forEach(document => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = document.url;
+                a.download = document.name;
+                a.textContent = document.name;
+                li.appendChild(a);
+                documentList.appendChild(li);
+            });
+        } catch (error) {
+            console.error('Error fetching documents:', error);
+        }
+    }
+
+    populateFacultyList(); 
+</script>
+
+</body>
+</html>
